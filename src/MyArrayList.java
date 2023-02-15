@@ -1,4 +1,4 @@
-public class StringListImpl implements StringList {
+public class MyArrayList implements StringList {
     @Override
     public String add(String item) {
         return null;
