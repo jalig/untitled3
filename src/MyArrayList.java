@@ -1,5 +1,4 @@
 import java.util.Arrays;
-import java.util.Objects;
 
 public class MyArrayList implements StringList {
     private final int DEFAULT_CAPACITY = 10;
