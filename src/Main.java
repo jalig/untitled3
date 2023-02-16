@@ -1,38 +1,44 @@
+import list.IntegerArrayList;
+
+
 import java.util.Arrays;
+import java.util.Random;
+import java.util.function.IntUnaryOperator;
 
 public class Main {
     public static void main(String[] args) {
-        MyArrayList arrayList = new MyArrayList(5);
-        MyArrayList arrayList2 = new MyArrayList(5);
+        int[] array = new int[100000];
+        Random random = new Random();
+        IntUnaryOperator randomInt = i -> random.nextInt();
+        Arrays.setAll(array, randomInt);
+        int[] array1 = array.clone();
+        int[] array2 = array.clone();
 
-        arrayList.add("1");
-        arrayList.add("2");
-        arrayList.add("3");
-
-        arrayList2.add("1");
-        arrayList2.add("2");
-        arrayList2.add(null);
-
-        System.out.println(arrayList.equals(arrayList2));
-
-//        System.out.println(arrayList);
-
-//        arrayList.clear();
-
-//        System.out.println(arrayList);
-//        System.out.println(Arrays.toString(arrayList.toArray()));
-//        arrayList.add(2, "5");
-//        arrayList.remove(4);
-//        arrayList.set(2,"gg");
-//        arrayList.remove("gg");
-//        arrayList.add(1, "6");
-//        arrayList.add(0, "7");
-//        arrayList.remove(2);
-//        System.out.println(arrayList.indexOf("29"));
-//        System.out.println(arrayList.get(2));
-//        System.out.println(arrayList.lastIndexOf("3"));
-//        System.out.println(arrayList);
-//        System.out.println(arrayList.size());
+        IntegerArrayList integerArrayList = new IntegerArrayList(100000);
+        for (int i = 0; i < 100000; i++) {
+            integerArrayList.add(random.nextInt(1000));
+        }
+        //оставил самый быстрый метод
+        long start2 = System.currentTimeMillis();
+        sortInsertion(array2);
+        System.out.println(System.currentTimeMillis() - start2);
 
     }
+    private static void swapElements(int[] arr, int indexA, int indexB) {
+        int tmp = arr[indexA];
+        arr[indexA] = arr[indexB];
+        arr[indexB] = tmp;
+    }
+    public static void sortInsertion(int[] arr) {
+        for (int i = 1; i < arr.length; i++) {
+            int temp = arr[i];
+            int j = i;
+            while (j > 0 && arr[j - 1] >= temp) {
+                arr[j] = arr[j - 1];
+                j--;
+            }
+            arr[j] = temp;
+        }
+    }
+
 }

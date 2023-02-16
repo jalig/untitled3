@@ -1,11 +1,15 @@
+package list;
+
+import service.MyList;
+
 import java.util.Arrays;
 
-public class MyArrayList implements StringList {
+public class StringArrayList implements MyList<String> {
     private final int DEFAULT_CAPACITY = 10;
     private String[] list;
     private int size;
 
-    public MyArrayList(int capacity) {
+    public StringArrayList(int capacity) {
         if (capacity < 0) {
             throw new IllegalArgumentException("Capacity < 0");
         } else if (capacity == 0) {
@@ -15,7 +19,7 @@ public class MyArrayList implements StringList {
         }
     }
 
-    public MyArrayList() {
+    public StringArrayList() {
         list = new String[DEFAULT_CAPACITY];
     }
 
@@ -118,7 +122,7 @@ public class MyArrayList implements StringList {
     }
 
     @Override
-    public boolean equals(StringList otherList) {
+    public boolean equals(MyList otherList) {
         if (otherList == null) {
             throw new IllegalArgumentException("Нельзя передавать null");
         }
