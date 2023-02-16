@@ -19,40 +19,41 @@ public class MyArrayList implements StringList {
         list = new String[DEFAULT_CAPACITY];
     }
 
-    @Override
-    public String add(String item) {
+    private void getIncreaseArray() {
         if (list[list.length - 1] != null) {
-            String[] newList = new String[list.length * 2];
-            System.arraycopy(list, 0, newList, 0, list.length);
-            list = newList;
+            list = Arrays.copyOf(list, list.length * 2);
         }
+    }
 
-        return list[size++] = item;
+    private void checkIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new IllegalArgumentException("Индекс " + index + " не существует в листе");
+        }
     }
 
     @Override
+    public String add(String item) {
+        getIncreaseArray();
+        list[size++] = item;
+        return item;
+    }
+
+
+    @Override
     public String add(int index, String item) {
-        if (list[list.length - 1] != null) {
-            String[] newList = new String[list.length * 2];
-            System.arraycopy(list, 0, newList, 0, index);
-            newList[index] = item;
-            System.arraycopy(list, index, newList, index + 1, list.length - index);
-            list = newList;
-            size++;
-        } else {
-            String[] newList = new String[list.length];
-            System.arraycopy(list, 0, newList, 0, index);
-            newList[index] = item;
-            System.arraycopy(list, index, newList, index + 1, list.length - (index + 1));
-            list = newList;
-            size++;
-        }
+        checkIndex(index);
+        getIncreaseArray();
+        String[] temp = Arrays.copyOf(list, size);
+        System.arraycopy(temp, 0, list, 0, index);
+        list[index] = item;
+        System.arraycopy(temp, index, list, index + 1, temp.length - index);
+        size++;
         return item;
     }
 
     @Override
     public String set(int index, String item) {
-        checkExp(index);
+        checkIndex(index);
         return list[index] = item;
     }
 
@@ -72,11 +73,7 @@ public class MyArrayList implements StringList {
 
     @Override
     public String remove(int index) {
-        checkExp(index);
-
-        if (list[index] == null) {
-            throw new IndexOutOfBoundsException("Элемента нет :(");
-        }
+        checkIndex(index);
 
         String string = list[index];
         System.arraycopy(list, index + 1, list, index, list.length - index - 1);
@@ -116,10 +113,7 @@ public class MyArrayList implements StringList {
 
     @Override
     public String get(int index) {
-        checkExp(index);
-        if (list[index] == null) {
-            throw new IndexOutOfBoundsException("Элемента нет :(");
-        }
+        checkIndex(index);
         return list[index];
     }
 
@@ -130,7 +124,7 @@ public class MyArrayList implements StringList {
         }
         if (size != otherList.size()) return false;
         for (int i = 0; i < size; i++) {
-            if (list[i] != otherList.get(i)) return false;
+            if (!list[i].equals(otherList.get(i))) return false;
         }
         return true;
     }
@@ -156,11 +150,6 @@ public class MyArrayList implements StringList {
         return Arrays.copyOf(list, size);
     }
 
-    private void checkExp(int index) {
-        if (index < 0 || index >= list.length) {
-            throw new ArrayIndexOutOfBoundsException("Неверный индекс");
-        }
-    }
 
     @Override
     public String toString() {
