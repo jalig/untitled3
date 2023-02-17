@@ -23,9 +23,9 @@ public class StringArrayList implements MyList<String> {
         list = new String[DEFAULT_CAPACITY];
     }
 
-    private void getIncreaseArray() {
+    private void grow() {
         if (list[list.length - 1] != null) {
-            list = Arrays.copyOf(list, list.length * 2);
+            list = Arrays.copyOf(list, list.length / 2 * 3);
         }
     }
 
@@ -37,7 +37,7 @@ public class StringArrayList implements MyList<String> {
 
     @Override
     public String add(String item) {
-        getIncreaseArray();
+        grow();
         list[size++] = item;
         return item;
     }
@@ -46,11 +46,9 @@ public class StringArrayList implements MyList<String> {
     @Override
     public String add(int index, String item) {
         checkIndex(index);
-        getIncreaseArray();
-        String[] temp = Arrays.copyOf(list, size);
-        System.arraycopy(temp, 0, list, 0, index);
+        grow();
+        System.arraycopy(list, index, list, index + 1, size - index);
         list[index] = item;
-        System.arraycopy(temp, index, list, index + 1, temp.length - index);
         size++;
         return item;
     }

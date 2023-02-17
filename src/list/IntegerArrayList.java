@@ -23,9 +23,40 @@ public class IntegerArrayList implements MyList<Integer> {
         list = new Integer[DEFAULT_CAPACITY];
     }
 
-    private void getIncreaseArray() {
+    public static void quickSort(Integer[] arr, int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(arr, begin, end);
+
+            quickSort(arr, begin, partitionIndex - 1);
+            quickSort(arr, partitionIndex + 1, end);
+        }
+    }
+
+    private static int partition(Integer[] arr, int begin, int end) {
+        int pivot = arr[end];
+        int i = (begin - 1);
+
+        for (int j = begin; j < end; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+
+                swapElements(arr, i, j);
+            }
+        }
+
+        swapElements(arr, i + 1, end);
+        return i + 1;
+    }
+
+    private static void swapElements(Integer[] arr, int left, int right) {
+        int temp = arr[left];
+        arr[left] = arr[right];
+        arr[right] = temp;
+    }
+
+    private void grow() {
         if (list[list.length - 1] != null) {
-            list = Arrays.copyOf(list, list.length * 2);
+            list = Arrays.copyOf(list, list.length / 2 * 3);
         }
     }
 
@@ -49,7 +80,7 @@ public class IntegerArrayList implements MyList<Integer> {
 
     @Override
     public Integer add(Integer item) {
-        getIncreaseArray();
+        grow();
         list[size++] = item;
         return item;
     }
@@ -57,7 +88,7 @@ public class IntegerArrayList implements MyList<Integer> {
     @Override
     public Integer add(int index, Integer item) {
         checkIndex(index);
-        getIncreaseArray();
+        grow();
         Integer[] temp = Arrays.copyOf(list, size);
         System.arraycopy(temp, 0, list, 0, index);
         list[index] = item;
@@ -95,12 +126,14 @@ public class IntegerArrayList implements MyList<Integer> {
         size--;
         return integer;
     }
+
     @Override
     public boolean contains(Integer item) {
-        sortInsertion();
-        return contains2(item);
+        quickSort(list, 0, size - 1);
+        return binarySort(item);
     }
-    private boolean contains2(int element) {
+
+    private boolean binarySort(int element) {
         int min = 0;
         int max = list.length - 1;
 
@@ -178,6 +211,7 @@ public class IntegerArrayList implements MyList<Integer> {
     public Integer[] toArray() {
         return Arrays.copyOf(list, size);
     }
+
     @Override
     public String toString() {
         return Arrays.toString(Arrays.copyOf(list, size));
